@@ -2,7 +2,6 @@ import Diagram from 'diagram-js';
 import { customRenderModule } from './renderer';
 
 export function createDiagram(container) {
-
   const diagram = new Diagram({
     canvas: { container },
     modules: [customRenderModule]
@@ -12,18 +11,13 @@ export function createDiagram(container) {
   const elementFactory = diagram.get('elementFactory');
   const elementRegistry = diagram.get('elementRegistry');
 
-  // ✅ ROOT (your hint applied correctly)
+  // =========================
+  // Root, Shapes & Connections
+  // =========================
   const root = elementFactory.createRoot({ id: 'root' });
   canvas.setRootElement(root);
 
-  // =========================
-  // Assignment 2 (includes 1)
-  // =========================
-  const width = 120;
-  const height = 60;
-  const startX = 150;
-  const startY = 100;
-  const gap = 40;
+  const width = 120, height = 60, startX = 150, startY = 100, gap = 40;
 
   for (let i = 0; i < 3; i++) {
     const shape = elementFactory.createShape({
@@ -33,13 +27,9 @@ export function createDiagram(container) {
       width,
       height
     });
-
     canvas.addShape(shape, root);
   }
 
-  // =========================
-  // Assignment 3
-  // =========================
   const shape1 = elementRegistry.get('shape1');
   const shape2 = elementRegistry.get('shape2');
   const shape3 = elementRegistry.get('shape3');
@@ -59,14 +49,30 @@ export function createDiagram(container) {
         { x: target.x, y: target.y + target.height / 2 }
       ]
     });
-
     canvas.addConnection(conn, root);
   });
 
-  // =========================
-  // Assignment 4
-  // =========================
-  canvas.zoom('fit-viewport');
-
   return { canvas };
 }
+
+const container = document.getElementById('diagram-container');
+const { canvas } = createDiagram(container);
+
+// 1. Fit Viewport Button
+document.getElementById('btn-fit').addEventListener('click', () => {
+  canvas.zoom('fit-viewport');
+});
+
+// 2. Zoom In (+) Button
+document.getElementById('btn-zoom-in').addEventListener('click', () => {
+  const currentZoom = canvas.zoom();
+  // Step zoom in by 0.25
+  canvas.zoom(currentZoom + 0.25); 
+});
+
+// 3. Zoom Out (-) Button
+document.getElementById('btn-zoom-out').addEventListener('click', () => {
+  const currentZoom = canvas.zoom();
+  // Step zoom out by 0.25
+  canvas.zoom(currentZoom - 0.25); 
+});
